@@ -5,13 +5,19 @@ require File.expand_path("../../test/dummy/config/environment.rb",  __FILE__)
 ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../test/dummy/db/migrate", __FILE__)]
 ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
 require "rails/test_help"
+require 'minitest/rails'
+require 'minitest/reporters'
+require 'color_pound_spec_reporter'
 
-# Filter out Minitest backtrace while allowing backtrace from other libraries
-# to be shown.
+unless Rails.version =~ /^4.[2-9]/
+  Rails.backtrace_cleaner.remove_silencers!
+end
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+Minitest::Reporters.use! [ColorPoundSpecReporter.new]
 
 # Load fixtures from the engine
 if ActiveSupport::TestCase.respond_to?(:fixture_path=)

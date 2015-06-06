@@ -17,4 +17,9 @@ Gem::Specification.new do |gem|
   gem.version       = Dynaspan::VERSION
   gem.requirements << "jQuery"
   gem.requirements << "Rails"
+
+
+  gem.add_development_dependency "sqlite3", "~> 1.3"
+  gem.add_development_dependency "minitest-rails", [">= 0.9", "< 3"]
+  gem.add_development_dependency "minitest-reporters", [">= 0.7.1", "< 2"]
 end
