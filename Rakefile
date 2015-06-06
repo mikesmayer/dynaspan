@@ -1,13 +1,40 @@
-#!/usr/bin/env rake
-require 'bundler/gem_tasks'
-require File.expand_path('../lib/dynaspan/source_file', __FILE__)
+# require 'bundler/gem_tasks'
+# require File.expand_path('../lib/dynaspan/source_file', __FILE__)
 
-desc 'Update Dynaspan Library, VERSION is required.'
-task 'update_dynaspan' do
-  files = SourceFile.new
-  files.fetch ENV['VERSION']
-  files.destination_root = 'vendor/assets'
-  files.move
-  files.fix_css
-  files.cleanup
+begin
+  require 'bundler/setup'
+rescue LoadError
+  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
 end
+
+# desc 'Update Dynaspan Library, VERSION is required.'
+# task 'update_dynaspan' do
+#   files = SourceFile.new
+#   files.fetch ENV['VERSION']
+#   files.destination_root = 'vendor/assets'
+#   files.move
+#   files.fix_css
+#   files.cleanup
+# end
+
+APP_RAKEFILE = File.expand_path("../test/dummy/Rakefile", __FILE__)
+load 'rails/tasks/engine.rake'
+
+
+load 'rails/tasks/statistics.rake'
+
+
+
+Bundler::GemHelper.install_tasks
+
+require 'rake/testtask'
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'lib'
+  t.libs << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+end
+
+
+task default: :test
